@@ -1,6 +1,6 @@
 TOPDIR=$(PWD)
 
-all: build slim run 
+all: build run 
 
 run: build
 	docker run -d \

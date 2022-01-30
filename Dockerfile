@@ -50,16 +50,14 @@ RUN \
 	/defaults
 
 # add s6 overlay
-# ADD https://github.com/just-containers/s6-overlay/releases/download/v${OVERLAY_VERSION}/s6-overlay-noarch-${OVERLAY_VERSION}.tar.xz /tmp
-# RUN tar -C / -Jxpf /tmp/s6-overlay-noarch-${OVERLAY_VERSION}.tar.xz
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz /tmp
-RUN tar -C / -xf /tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz
 
 RUN \
- echo "**** install jq ****" && \
+ tar -C / -xf /tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz && \
+ echo "**** install dependencies ****" && \
  apt-get update && \
  apt-get install -y \
-	jq curl unzip && \
+	jq curl unzip wget make python3 python3-cryptography && \
  echo "**** install duplicati ****" && \
  if [ -z ${DUPLICATI_RELEASE+x} ]; then \
 	DUPLICATI_RELEASE=$(curl -sX GET "https://api.github.com/repos/duplicati/duplicati/releases" \
@@ -72,13 +70,32 @@ RUN \
  /tmp/duplicati.zip -L \
 	"${duplicati_url}" && \
  unzip -q /tmp/duplicati.zip -d /app/duplicati && \
+ echo "**** fix CA certificates ****" && \
+ mkdir /certs && \
+ cd /certs && \
+ wget https://launchpad.net/debian/+archive/primary/+sourcefiles/ca-certificates/20211016/ca-certificates_20211016.tar.xz && \
+    tar -xJf ca-certificates_20211016.tar.xz && \
+    cd work && \
+    make && \
+    make install && \
+    sed -i"" 's/mozilla\/DST_Root_CA_X3.crt/!mozilla\/DST_Root_CA_X3.crt/' /etc/ca-certificates.conf && \
+    rm -rf /usr/share/ca-certificates/mozilla/DST_ROOT_CA_X3.crt /etc/ssl/certs/DST_Root_CA_X3.pem && \
+    dpkg-reconfigure -fnoninteractive ca-certificates && \
+    update-ca-certificates -f && \
  echo "**** cleanup ****" && \
- apt-get remove -y patch && \
+ export DEBIAN_FRONTEND=noninteractive && \
+ apt-get --yes --allow-downgrades --allow-remove-essential --allow-change-held-packages --purge remove \
+    make patch curl unzip && \
+ apt-get --yes --allow-downgrades --allow-remove-essential --allow-change-held-packages --purge --auto-remove remove \
+    python3 python3-cryptography gnupg xz-utils locales && \ 
  apt-get autoremove && \
  apt-get clean && \
  rm -rf \
 	/tmp/* \
-    /usr/share/* \
+    /certs \
+    /usr/share/doc/* \
+    /usr/share/fonts/* \
+    /usr/share/i18n/* \
 	/var/lib/apt/lists/* \
 	/var/tmp/* \
     /var/cache/apt/archives/* \
