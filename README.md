@@ -1,20 +1,8 @@
-# deb-postgres
+# deb-duplicati
 
-Postgres database based on Debian Bullseye Slim with useful modules added.
+Duplicati backup tool based on Debian Bullseye Slim.
 
-The inspiration for this image comes from [frodenas postgres](https://github.com/frodenas/docker-postgresql) but updated for the latest postgres 14 and bullseye slim.
-
-The following modules are installed:
-
-- [Postgresql contrib](https://www.postgresql.org/docs/14/contrib.html) - Awesome PostgreSQL extensions
-- [PostGIS](https://postgis.net/) - PostGIS extension
-- [pgRouting](https://pgrouting.org/) - PostgreSQL PostGIS routing extension
-- [pgTAP](https://pgtap.org/) - Postgres unit testing on steriods
-- [pg_cron](https://github.com/citusdata/pg_cron) - PostgreSQL cron extension
-- [pgjwt](https://github.com/michelp/pgjwt) - PostgreSQL JSON Web Token extension
-- [plv8](https://github.com/plv8/plv8) - Javascript runtime extension
-
-This is intended to be a developer friendly postgres; if a production image is required, we suggest [Supabase](https://github.com/supabase/postgres).
+The inspiration for this image comes from [linuxserver-duplicati](https://github.com/linuxserver/docker-duplicati).
 
 ___
 
