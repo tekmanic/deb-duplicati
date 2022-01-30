@@ -1,5 +1,7 @@
 # deb-duplicati
 
+[![docker-tag-triggered-prod](https://github.com/tekmanic/deb-duplicati/actions/workflows/docker-tag-triggered-prod.yaml/badge.svg)](https://github.com/tekmanic/deb-duplicati/actions/workflows/docker-tag-triggered-prod.yaml)
+
 Duplicati backup tool based on Debian Bullseye Slim.
 
 The inspiration for this image comes from [linuxserver-duplicati](https://github.com/linuxserver/docker-duplicati).
