@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd /app/duplicati || exit
+
+exec s6-setuidgid abc mono Duplicati.Server.exe --log-file=logfile.txt \
+	--webservice-interface=any --server-datafolder=/config --webservice-allowed-hostnames=* $CLI_ARGS
