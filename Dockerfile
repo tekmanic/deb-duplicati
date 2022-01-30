@@ -78,8 +78,11 @@ RUN \
  apt-get clean && \
  rm -rf \
 	/tmp/* \
+    /usr/share/* \
 	/var/lib/apt/lists/* \
-	/var/tmp/*
+	/var/tmp/* \
+    /var/cache/apt/archives/* \
+    /var/dpkg/info/*
 
 # copy local files
 COPY root/ /

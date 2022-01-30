@@ -1,6 +1,6 @@
 TOPDIR=$(PWD)
 
-all: build run 
+all: build slim run 
 
 run: build
 	docker run -d \
@@ -18,6 +18,9 @@ run: build
 
 build:
 	docker build -t deb-duplicati:latest .
+
+slim:
+	docker-slim build --dockerfile Dockerfile --tag deb-duplicati:slim .
 
 clean:
 	docker kill deb-duplicati || true
